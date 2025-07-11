@@ -64,11 +64,8 @@
       bottom: 24px;
       right: 24px;
     }
-    df-messenger-chat {
-      bot-writing-text: 'DF is typing...';
-    }
     df-messenger-chat-bubble {
-      --df-messenger-chat-bubble-icon: url('https://media.gettyimages.com/id/1479744575/vector/robot-artificial-intelligence-avatar-icon-profile-diverse-bot-face-for-chatbot-and-social.jpg?s=1024x1024&w=gi&k=20&c=HJ6ZJ__0AZSqU4Nzf7eOu9yhKBDHe8T2YwJOQD1T5IM='); /*('https://via.placeholder.com/40?text=AI');*/ /* Replace with your AI avatar image URL */
+      --df-messenger-chat-bubble-icon: url('https://via.placeholder.com/40?text=AI'); /* Replace with your AI avatar image URL */
       --df-messenger-chat-bubble-background: linear-gradient(135deg, #00d4ff, #ff00ff); /* Neon gradient */
       border-radius: 50%;
       border: 2px solid transparent;
@@ -118,9 +115,14 @@
     agent-id="44650ad5-68c7-486c-99d5-8e488f2aa761"
     language-code="en"
     max-query-length="-1">
-    <df-messenger-chat-bubble
-      chat-title="dl-ai-avatar">
-    </df-messenger-chat-bubble>
+    <df-messennger-chat
+      bot-writing-text="DF is typing.."
+      bot-actor-image="https://media.gettyimages.com/id/1479744575/vector/robot-artificial-intelligence-avatar-icon-profile-diverse-bot-face-for-chatbot-and-social.jpg?s=1024x1024&w=gi&k=20&c=HJ6ZJ__0AZSqU4Nzf7eOu9yhKBDHe8T2YwJOQD1T5IM=",
+      user-actor-image="">
+      <df-messenger-chat-bubble
+        chat-title="DF AI Avatar">
+      </df-messenger-chat-bubble>
+    </df-messennger-chat>
   </df-messenger>
   <script>
     // Wait for Dialogflow Messenger script to load
