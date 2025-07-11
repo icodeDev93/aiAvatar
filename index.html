@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dialogflow AI Avatar Test App</title>
+  <link rel="stylesheet" href="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/themes/df-messenger-default.css">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #1e1f29; /* Deepfunding's color */
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+    }
+    .container {
+      text-align: center;
+      padding: 20px;
+      background-color: #2e2f3a; /* Slightly lighter shade to complement #1e1f29 */
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 255, 255, 0.2); /* Neon glow effect */
+      max-width: 600px;
+      width: 90%;
+    }
+    h1 {
+      color: #00d4ff; /* Neon cyan for AI aesthetic */
+      margin-bottom: 20px;
+      text-shadow: 0 0 5px #00d4ff;
+    }
+    p {
+      color: #b0b0cc;
+    }
+    .warning {
+      background-color: #ff4d4d;
+      color: #fff;
+      padding: 10px;
+      border-radius: 5px;
+      margin: 10px 0;
+      display: none;
+    }
+    df-messenger {
+      z-index: 999;
+      position: fixed;
+      --df-messenger-font-color: #000000; /* Black text for high contrast */
+      --df-messenger-font-family: 'Roboto', sans-serif; /* Modern, techy font */
+      --df-messenger-chat-background: #e0f7ff; /* Light cyan chat window for visibility */
+      --df-messenger-message-user-background: #007acc; /* Darker blue for user messages */
+      --df-messenger-message-bot-background: #ffffff; /* White for bot messages */
+      --df-messenger-button-titlebar-color: #00d4ff; /* Neon titlebar */
+      --df-messenger-button-titlebar-font-color: #000;
+      --df-messenger-input-background: #ffffff; /* White input background */
+      --df-messenger-input-font-color: #000000; /* Black input text */
+      bottom: 16px;
+      right: 16px;
+    }
+    df-messenger-chat-bubble {
+      --df-messenger-chat-bubble-icon: url('https://via.placeholder.com/40?text=AI'); /* Replace with your AI avatar image URL */
+      --df-messenger-chat-bubble-background: #00d4ff; /* Neon bubble background */
+      border-radius: 50%; /* Circular for avatar look */
+      animation: pulse 2s infinite; /* Pulsing animation for AI effect */
+    }
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7); }
+      70% { box-shadow: 0 0 0 10px rgba(0, 212, 255, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
+    }
+    /* Override input field styles for better visibility */
+    df-messenger::part(input-field) {
+      background-color: #ffffff !important;
+      color: #000000 !important;
+      border: 1px solid #00d4ff !important;
+      border-radius: 4px;
+    }
+    df-messenger::part(input-field)::placeholder {
+      color: #666666 !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Dialogflow AI Avatar Test</h1>
+    <p>Interact with the AI avatar chatbot below to test the integration.</p>
+    <div id="script-error" class="warning">
+      Error: Dialogflow Messenger script failed to load. Check your internet connection or script URL.
+    </div>
+  </div>
+  <script src="https://www.gstatic.com/dialogflow-console/fast/df-messenger/prod/v1/df-messenger.js" defer></script>
+  <df-messenger
+    project-id="labs-463322"
+    agent-id="44650ad5-68c7-486c-99d5-8e488f2aa761"
+    language-code="en"
+    max-query-length="-1">
+    <df-messenger-chat-bubble
+      chat-title="dl-ai-avatar">
+    </df-messenger-chat-bubble>
+  </df-messenger>
+  <script>
+    // Wait for Dialogflow Messenger script to load
+    function checkMessengerLoaded() {
+      const scriptErrorDiv = document.getElementById('script-error');
+      const dfMessenger = document.querySelector('df-messenger');
+
+      if (!dfMessenger || typeof customElements.get('df-messenger') === 'undefined') {
+        console.error('Dialogflow Messenger script failed to load or custom element not defined.');
+        scriptErrorDiv.style.display = 'block';
+        return;
+      }
+    }
+
+    // Listen for script load or timeout
+    const script = document.querySelector('script[src*="df-messenger.js"]');
+    if (script) {
+      script.addEventListener('load', checkMessengerLoaded);
+      script.addEventListener('error', () => {
+        console.error('Failed to load Dialogflow Messenger script.');
+        document.getElementById('script-error').style.display = 'block';
+      });
+    } else {
+      console.error('Dialogflow Messenger script tag not found.');
+      document.getElementById('script-error').style.display = 'block';
+    }
+
+    // Fallback: Check after a timeout in case load event doesn't fire
+    setTimeout(checkMessengerLoaded, 5000);
+  </script>
+</body>
+</html>
