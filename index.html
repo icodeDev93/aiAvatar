@@ -97,7 +97,10 @@
       transform: scale(1.2);
       transition: transform 0.3s ease;
     }
-    /* Hide chat window initially */
+    /* Hide default chat bubble and ensure chat window is hidden initially */
+    df-messenger[chat-icon="off"]::part(chat-bubble) {
+      display: none !important;
+    }
     df-messenger::part(chat-wrapper) {
       display: none !important;
     }
@@ -116,7 +119,8 @@
     project-id="labs-463322"
     agent-id="44650ad5-68c7-486c-99d5-8e488f2aa761"
     language-code="en"
-    max-query-length="-1">
+    max-query-length="-1"
+    chat-icon="off"> <!-- Disable default chat bubble -->
     <df-messenger-chat
       bot-writing-text="DF is typing.."
       bot-actor-image="https://media.gettyimages.com/id/1479744575/vector/robot-artificial-intelligence-avatar-icon-profile-diverse-bot-face-for-chatbot-and-social.jpg?s=1024x1024&w=gi&k=20&c=HJ6ZJ__0AZSqU4Nzf7eOu9yhKBDHe8T2YwJOQD1T5IM="
@@ -138,18 +142,25 @@
         return;
       }
 
-      // Ensure only one chat bubble is rendered and chat window is toggled correctly
+      // Ensure chat window is hidden initially and toggled by custom bubble
       const chatBubble = dfMessenger.querySelector('df-messenger-chat-bubble');
       const chatWrapper = dfMessenger.shadowRoot.querySelector('div[part="chat-wrapper"]');
 
       if (chatBubble && chatWrapper) {
-        // Ensure chat window is hidden initially
+        // Hide chat window initially
         chatWrapper.style.display = 'none';
 
-        // Toggle chat window when bubble is clicked
+        // Toggle chat window when custom bubble is clicked
         chatBubble.addEventListener('click', () => {
-          chatWrapper.style.display = chatWrapper.style.display === 'none' ? 'block' : 'none';
+          const isVisible = chatWrapper.style.display === 'block';
+          chatWrapper.style.display = isVisible ? 'none' : 'block';
         });
+
+        // Prevent default bubble from interfering (optional backup)
+        const defaultBubble = dfMessenger.shadowRoot.querySelector('df-messenger-chat-bubble');
+        if (defaultBubble && defaultBubble !== chatBubble) {
+          defaultBubble.style.display = 'none';
+        }
       } else {
         console.error('Chat bubble or chat wrapper not found in df-messenger.');
       }
