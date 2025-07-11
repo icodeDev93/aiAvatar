@@ -11,7 +11,7 @@
       font-family: 'Orbitron', sans-serif;
       margin: 0;
       padding: 0;
-      background: linear-gradient(135deg, #1e1f29 0%, #2a2a4a 100%); /* Deepfunding's color with gradient */
+      background: linear-gradient(135deg, #1e1f29 0%, #2a2a4a 100%);
       color: #e0e0e0;
       display: flex;
       flex-direction: column;
@@ -22,7 +22,7 @@
     .container {
       text-align: center;
       padding: 20px;
-      background: rgba(255, 255, 255, 0.1); /* Glassmorphism effect */
+      background: rgba(255, 255, 255, 0.1);
       backdrop-filter: blur(10px);
       border-radius: 12px;
       box-shadow: 0 8px 32px rgba(0, 255, 255, 0.2);
@@ -31,9 +31,9 @@
       border: 1px solid rgba(255, 255, 255, 0.2);
     }
     h1 {
-      color: #00d4ff; /* Neon cyan */
+      color: #00d4ff;
       margin-bottom: 20px;
-      text-shadow: 0 0 10px #00d4ff, 0 0 20px #ff00ff; /* Dual neon glow */
+      text-shadow: 0 0 10px #00d4ff, 0 0 20px #ff00ff;
       font-weight: 700;
     }
     p {
@@ -52,33 +52,32 @@
     df-messenger {
       z-index: 999;
       position: fixed;
-      --df-messenger-font-color: #000000; /* Black text for contrast */
-      --df-messenger-font-family: 'Orbitron', sans-serif; /* Futuristic font */
-      --df-messenger-chat-background: rgba(224, 247, 255, 0.2); /* Glassmorphism chat window */
-      --df-messenger-message-user-background: linear-gradient(90deg, #007acc, #00d4ff); /* Gradient user messages */
-      --df-messenger-message-bot-background: rgba(255, 255, 255, 0.9); /* Semi-transparent white for bot */
-      --df-messenger-button-titlebar-color: linear-gradient(90deg, #00d4ff, #ff00ff); /* Neon gradient titlebar */
+      --df-messenger-font-color: #000000;
+      --df-messenger-font-family: 'Orbitron', sans-serif;
+      --df-messenger-chat-background: rgba(224, 247, 255, 0.2);
+      --df-messenger-message-user-background: linear-gradient(90deg, #007acc, #00d4ff);
+      --df-messenger-message-bot-background: rgba(255, 255, 255, 0.9);
+      --df-messenger-button-titlebar-color: linear-gradient(90deg, #00d4ff, #ff00ff);
       --df-messenger-button-titlebar-font-color: #000;
-      --df-messenger-input-background: rgba(255, 255, 255, 0.9); /* White input with slight transparency */
-      --df-messenger-input-font-color: #000000; /* Black input text */
+      --df-messenger-input-background: rgba(255, 255, 255, 0.9);
+      --df-messenger-input-font-color: #000000;
       bottom: 24px;
       right: 24px;
     }
     df-messenger-chat-bubble {
-      --df-messenger-chat-bubble-icon: url('https://via.placeholder.com/40?text=AI'); /* Replace with your AI avatar image URL */
-      --df-messenger-chat-bubble-background: linear-gradient(135deg, #00d4ff, #ff00ff); /* Neon gradient */
+      --df-messenger-chat-bubble-icon: url('https://via.placeholder.com/40?text=AI');
+      --df-messenger-chat-bubble-background: linear-gradient(135deg, #00d4ff, #ff00ff);
       border-radius: 50%;
       border: 2px solid transparent;
       background-clip: padding-box;
       box-shadow: 0 0 15px rgba(0, 212, 255, 0.5), 0 0 25px rgba(255, 0, 255, 0.5);
-      animation: pulse 2s infinite; /* Pulsing animation for AI effect */
+      animation: pulse 2s infinite;
     }
     @keyframes pulse {
       0% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0.7); }
       70% { box-shadow: 0 0 0 10px rgba(0, 212, 255, 0); }
       100% { box-shadow: 0 0 0 0 rgba(0, 212, 255, 0); }
     }
-    /* Override input field styles */
     df-messenger::part(input-field) {
       background: rgba(255, 255, 255, 0.9) !important;
       color: #000000 !important;
@@ -94,10 +93,13 @@
       50% { border-color: #ff00ff; }
       100% { border-color: #00d4ff; }
     }
-    /* Hover effect for chat bubble */
     df-messenger-chat-bubble:hover {
       transform: scale(1.2);
       transition: transform 0.3s ease;
+    }
+    /* Hide chat window initially */
+    df-messenger::part(chat-wrapper) {
+      display: none !important;
     }
   </style>
 </head>
@@ -117,11 +119,11 @@
     max-query-length="-1">
     <df-messenger-chat
       bot-writing-text="DF is typing.."
-      bot-actor-image="https://media.gettyimages.com/id/1479744575/vector/robot-artificial-intelligence-avatar-icon-profile-diverse-bot-face-for-chatbot-and-social.jpg?s=1024x1024&w=gi&k=20&c=HJ6ZJ__0AZSqU4Nzf7eOu9yhKBDHe8T2YwJOQD1T5IM=",
+      bot-actor-image="https://media.gettyimages.com/id/1479744575/vector/robot-artificial-intelligence-avatar-icon-profile-diverse-bot-face-for-chatbot-and-social.jpg?s=1024x1024&w=gi&k=20&c=HJ6ZJ__0AZSqU4Nzf7eOu9yhKBDHe8T2YwJOQD1T5IM="
       user-actor-image="">
     </df-messenger-chat>
     <df-messenger-chat-bubble
-        chat-title="DF AI Avatar">
+      chat-title="DF AI Avatar">
     </df-messenger-chat-bubble>
   </df-messenger>
   <script>
@@ -135,9 +137,25 @@
         scriptErrorDiv.style.display = 'block';
         return;
       }
+
+      // Ensure only one chat bubble is rendered and chat window is toggled correctly
+      const chatBubble = dfMessenger.querySelector('df-messenger-chat-bubble');
+      const chatWrapper = dfMessenger.shadowRoot.querySelector('div[part="chat-wrapper"]');
+
+      if (chatBubble && chatWrapper) {
+        // Ensure chat window is hidden initially
+        chatWrapper.style.display = 'none';
+
+        // Toggle chat window when bubble is clicked
+        chatBubble.addEventListener('click', () => {
+          chatWrapper.style.display = chatWrapper.style.display === 'none' ? 'block' : 'none';
+        });
+      } else {
+        console.error('Chat bubble or chat wrapper not found in df-messenger.');
+      }
     }
 
-    // Listen for script load or timeout
+    // Listen for script load or error
     const script = document.querySelector('script[src*="df-messenger.js"]');
     if (script) {
       script.addEventListener('load', checkMessengerLoaded);
@@ -150,7 +168,7 @@
       document.getElementById('script-error').style.display = 'block';
     }
 
-    // Fallback: Check after a timeout in case load event doesn't fire
+    // Fallback: Check after a timeout
     setTimeout(checkMessengerLoaded, 5000);
   </script>
 </body>
