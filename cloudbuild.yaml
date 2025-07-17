@@ -1,0 +1,43 @@
+timeout: "1200s"
+
+steps:
+  # Step 1: Fetch the script & requirements
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args:
+      - cp
+      - gs://dl-ai-avatar/scripts/script.py
+      - gs://dl-ai-avatar/scripts/requirements.txt
+      - .
+
+  # Step 2: Clone the repo
+  - name: 'gcr.io/cloud-builders/git'
+    args:
+      - clone
+      - https://github.com/DF-Circles/dl-ai-avatar.git
+
+  # Step 3: Install dependencies & run extractor
+  - name: 'python:3.9'
+    entrypoint: bash
+    args:
+      - -c
+      - |
+        pip install -r requirements.txt
+        python script.py
+
+  # Step 4: Upload the result
+  - name: 'gcr.io/cloud-builders/gsutil'
+    args:
+      - cp
+      - docs.txt
+      - gs://dl-ai-avatar/documentation.txt
+
+  # Step 5: Logging
+  - name: 'bash'
+    args:
+      - 'echo'
+      - 'Build complete'
+
+logsBucket: 'gs://dl-ai-avatar/logs'
+
+options:
+  logging: GCS_ONLY
